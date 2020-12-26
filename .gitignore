@@ -4,3 +4,12 @@ maven-status/
 *.class
 target/
 liberty/
+.classpath
+.metadata/
+.project
+.settings/
+.vscode/
+lib/*
+.myapp_settings
+.myapp_settings*
+.dp_log
