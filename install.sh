@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IoEasier_VERSION=0.2
+IoEasier_VERSION=0.4
 
 if [ ! -d lib ]; then mkdir lib; fi
 

@@ -10,6 +10,8 @@ import java.util.AbstractMap.SimpleEntry;
 
 import psykeco.ioeasier.db.ConnessioneDB;
 import psykeco.ioeasier.db.MySqlConnection;
+import psykeco.ioeasier.db.querycraft.QueryCraft;
+import psykeco.ioeasier.db.querycraft.SQLInsertCraft;
 import psykeco.ioeasier.io.DebugPrint;
 import utils.MyAppConstant;
 import utils.MyAppLog;
@@ -27,21 +29,8 @@ public class SQLDAO implements QueryDAO {
     }
 	
 	public Entry<String,String> insert(String table, Map<String,String> values) {
-        String errore="";
-        try {
-            if ( ! ConnessioneDB.createInstance(getMysqlSettings())) errore ="ConnessioneDB non riesce ad instaurare la connessione";
-        } catch (IllegalStateException ise){
-            // driver mancanti
-            dp.println("[DEBUG:> SQLDAO insert] "+ise);
-            for(StackTraceElement s: ise.getStackTrace()){
-                dp.println(s);
-            }
-            dp.print("\n\n");
-            ise.printStackTrace();
-            errore =ise.getMessage();
-            errore = (errore == null )? ise.toString() : errore;
-        }
-
+        String errore=QueryDAO.createConnection();
+        
         if (! errore.equals(""))
             return new SimpleEntry<>("KO",errore);
 
@@ -50,24 +39,15 @@ public class SQLDAO implements QueryDAO {
 
         final String DB_NAME=MyAppProperties.getInstance().getValue(MyAppConstant.DB_NAME);
 
-        StringBuilder query= new StringBuilder(values.size()*2*100);
-        StringBuilder s_values= new StringBuilder(values.size()*100);
-        
-        query.append("insert into `"+DB_NAME+"`.`"+table+"` (");
-        s_values.append("(");
-        
-        for (Entry<String,String> k: values.entrySet()) {
-            query.append   (" `"+k.getKey()+  "`,");
-            s_values.append(" '"+k.getValue()+"',");
-        }
-        query   .setCharAt(query   .length()-1,')');
-        s_values.setCharAt(s_values.length()-1,')');
+        QueryCraft q = new SQLInsertCraft ().DB(DB_NAME).table(table);
 
-        String queryComp=query.toString()+" values "+s_values.toString();
+        for (Entry<String,String> kv : values.entrySet()) q.entry(kv.getKey(),kv.getValue());
 
-        dp.println("[DEBUG:> SQLDAO insert] query="+queryComp);
+        String qcrafted=q.craft();
 
-        if(! c.esegui(queryComp)) {
+        dp.println("[DEBUG:> SQLDAO insert] query="+qcrafted);
+
+        if(! c.esegui(qcrafted)) {
             dp.println("[DEBUG:> SQLDAO insert] ERRORE NELLA QUERY");
             
             return new SimpleEntry<>("KO","errore nella query");
@@ -89,17 +69,5 @@ public class SQLDAO implements QueryDAO {
         return null;
     }
     
-    private static String[] getMysqlSettings() {
-    	MyAppProperties properties=MyAppProperties.getInstance();
-        
-        if (properties==null)
-            return null;
-            
-    	String[] credenziali=new String[2];
-    	
-    	credenziali[0]=properties.getValue(MyAppConstant.DB_USER);
-    	credenziali[1]=properties.getValue(MyAppConstant.DB_PASSWORD);
-    	
-    	return credenziali;
-    }
+   
 }

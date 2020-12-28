@@ -93,8 +93,8 @@ function callInsertTest() {
     xhr.send(JSON.stringify(
         {
             "tabella": "Test",
-            "prop": "propriet\u00e0 1",
-            "value": "valore 1"
+            "prop": "TestCraft",
+            "value": "valore"
         }
     ));
 }

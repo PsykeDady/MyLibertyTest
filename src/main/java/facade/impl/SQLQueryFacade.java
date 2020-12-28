@@ -30,12 +30,12 @@ public class SQLQueryFacade implements QueryFacade {
     public Entry<String,String> insert(String table, Map<String,String> values){
         if( table ==null || table.equals("")){
             dp.println("[DEBUG:> SQLQueryFacade insert] manca il parametro \"tabella\" al json in ingresso");
-            return new SimpleEntry<>("KO." ,"manca tabella");
+            return new SimpleEntry<>("KO" ,"manca tabella");
         }
 
         if ( values.isEmpty() ){
             dp.println("[DEBUG:> SQLQueryFacade insert] mancano i valori in ingresso, almeno un valore atteso");
-            return new SimpleEntry<>("KO." ," mancano valori");
+            return new SimpleEntry<>("KO" ," mancano valori");
         }
 
         return query.insert(table, values);
