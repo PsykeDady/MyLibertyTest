@@ -17,6 +17,23 @@ Per windows invece, potreste scaricare a mano il Jar IOEasier e quindi installar
 mvn install:install-file -Dfile=IoEasier.jar  -DgroupId=psykeco -DartifactId=ioeasier -Dversion="$IoEasier_VERSION" -Dpackaging=jar -DgeneratePom=true -X
 ```
 
+## config del server
+
+il file di config del server previsto dal flusso si deve trovare nella cartella `liberty/config` e si deve chiamare `myapp_settings` ( può essere cambiato nelle varie classi del server)
+
+Attualmente son stati previsti i seguenti campi:
+```properties
+# Connessioni db
+DB_NAME=<NOME DEL DB>
+DB_USER=<NOME UTENTE>
+DB_PASSWORD=<PASSWORD>
+
+# LOGGING
+DEBUG_LOG=<PERCORSO DEL FILE DI LOG>
+DEBUG_GLOBAL=<1 SE VUOI ATTIVARE IL DEBUG, 0 ALTRIMENTI>
+```
+
+
 ## dev mode
 
 `mvn liberty:dev`

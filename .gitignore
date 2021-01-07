@@ -3,7 +3,6 @@ maven-status/
 */*.class
 *.class
 target/
-liberty/
 .classpath
 .metadata/
 .project
