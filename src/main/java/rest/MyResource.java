@@ -3,6 +3,8 @@ package rest;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -11,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 
 import facade.QueryFacade;
 import facade.impl.SQLQueryFacade;
-
+import jobs.MyAppDaemon;
 import psykeco.ioeasier.io.DebugPrint;
 import utils.MyAppLog;
 
@@ -21,6 +23,7 @@ public class MyResource {
     
     private static final QueryFacade facade=new SQLQueryFacade();
     private static DebugPrint dp;
+
     
     static{
         dp=new DebugPrint(MyAppLog.getInstance());
@@ -32,6 +35,15 @@ public class MyResource {
     @Path("hello")
     public String hello() {
         return "Ciao";
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("instantTimerStart")
+    public String instantTimerStart() {
+
+        MyAppDaemon.getInstance().nextTimer(1);
+        return "OK";
     }
     
     
