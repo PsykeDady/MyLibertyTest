@@ -1,4 +1,4 @@
-package dto.relazioni;
+package models.infosessions;
 
 
 public class Sessione {

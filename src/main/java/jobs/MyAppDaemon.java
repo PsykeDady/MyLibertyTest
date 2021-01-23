@@ -1,10 +1,7 @@
 package jobs;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.time.LocalDateTime;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
@@ -16,6 +13,12 @@ import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.ejb.TimerService;
 
+import jobs.impl.MyJobTest;
+import psykeco.ioeasier.io.DebugPrint;
+import psykeco.littlejonh.LittleJonH;
+import utils.MyAppConstant;
+import utils.MyAppProperties;
+
 
 @Startup 
 @Singleton
@@ -23,8 +26,12 @@ public class MyAppDaemon{
 	@Resource 
 	private TimerService timerService;
 
-	private static MyAppDaemon instance;
-	
+	private DebugPrint dp;
+
+	private IMyJobs jobs[]={
+		new MyJobTest()
+	};
+
 	/**
 	 * run commands
 	 */
@@ -32,40 +39,31 @@ public class MyAppDaemon{
 	public void daemonRC() {
 		System.out.println("\n\n####Daemon load...####\n\n");
 
-		File f=new File("daemonRC");
+		dp=new DebugPrint(MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_LOG),true);
+		dp.debug_mode=true;
+		DebugPrint.global_mode=MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_GLOBAL).equals("1");
 
-		try (PrintWriter pw=new PrintWriter(f)){
-			
-			System.out.println("start log file in "+f.getAbsolutePath());
-			pw.append("TEST"+LocalDateTime.now());
-			
-		} catch (Exception e) {}
+		dp.println("SERVER START NOW: "+LocalDateTime.now());
 		
-		instance=this;
-
-		nextTimer(5*60);
+		nextTimer(1*60+0L);
 
 	}
-
-
-	public static MyAppDaemon getInstance() {return instance;}
 	
 	@Timeout
 	public void loop(Timer t){
 
 		System.out.println("\n\n####TIMER TICK####\n\n");
 
-		File f=new File("daemonLoop");
+		dp.println("SERVER LOOP TICK ON: "+LocalDateTime.now());
 
-		try (
-			FileWriter fr = new FileWriter(f, true);
-			BufferedWriter br = new BufferedWriter(fr)
-		){
-			br.write("Scrittura "+LocalDateTime.now());
-		}catch (Exception e) {}
+		for (IMyJobs job : jobs ){
+			if(!job.busy()) job.task();
+		}
 
+		LittleJonH cron=new LittleJonH("* * * * *");
 	
-		nextTimer(5*60);
+		// nextTimer(1*60);
+		nextCalendar(cron.nextT());
 		
 	}
 
@@ -101,15 +99,8 @@ public class MyAppDaemon{
 	public void daemonDestroy() {
 		System.out.println("\n\n####Daemon stop...####\n\n");
 
-		File f=new File("daemonSTOP");
-
-		try (PrintWriter pw=new PrintWriter(f)) {
+		dp.println("SERVER STOP NOW :"+LocalDateTime.now());
 			
-			System.out.println("stop log file in "+f.getAbsolutePath());
-			pw.append("TEST"+LocalDateTime.now());
-
-			
-		}catch (Exception e) {}
 	}
 
 }

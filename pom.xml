@@ -63,7 +63,17 @@
         <dependency>
             <groupId>psykeco</groupId>
             <artifactId>ioeasier</artifactId>
-            <version>0.4</version>
+            <version>0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>psykeco</groupId>
+            <artifactId>littlejonh</artifactId>
+            <version>0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>psykeco</groupId>
+            <artifactId>querycraft</artifactId>
+            <version>0.8</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

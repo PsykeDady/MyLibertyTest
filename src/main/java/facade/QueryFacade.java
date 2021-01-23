@@ -9,8 +9,11 @@ import java.util.Map.Entry;
  */
 public interface QueryFacade {
 
-	public Entry<String,String> insert(String table, Map<String,String> values);
-	public List<Object> select(String table, Map<String,String> values);
-	public void remove        (String table, Map<String,String> values);
+	public void			insert(Object o);
+	public List<Object>	select(Object o);
+	public void 		remove(Object o);
+	public void 		update(Object o);
+
+	public Entry<String,String> getResp();
     
 }

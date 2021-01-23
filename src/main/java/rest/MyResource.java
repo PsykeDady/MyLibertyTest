@@ -3,8 +3,6 @@ package rest;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.ejb.EJB;
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -13,9 +11,11 @@ import javax.ws.rs.core.MediaType;
 
 import facade.QueryFacade;
 import facade.impl.SQLQueryFacade;
-import jobs.MyAppDaemon;
 import psykeco.ioeasier.io.DebugPrint;
-import utils.MyAppLog;
+import utils.MyAppConstant;
+import utils.MyAppProperties;
+
+import static models.infosessions.ResponseState.*;
 
 @Path("my")
 public class MyResource {
@@ -26,7 +26,7 @@ public class MyResource {
 
     
     static{
-        dp=new DebugPrint(MyAppLog.getInstance());
+        dp=new DebugPrint(MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_LOG),true);
 		dp.debug_mode=true;
     }
     
@@ -42,8 +42,7 @@ public class MyResource {
     @Path("instantTimerStart")
     public String instantTimerStart() {
 
-        MyAppDaemon.getInstance().nextTimer(1);
-        return "OK";
+        return toStringReponse(KO,"not implemented yet");
     }
     
     
@@ -76,6 +75,8 @@ public class MyResource {
         for( Entry<String,String> kv: m.entrySet() ){
             sb.append(kv.getKey()+"="+kv.getValue()+'\n');
         }
+
+        dp.flush();
         return sb.toString();
     }
 
@@ -91,16 +92,8 @@ public class MyResource {
             m        
         );
 
-        if (m==null){
-            return "KO; Non son stati trovati valori!";
-        }
-        
-        String tabella=m.remove("tabella");
 
-        Entry<String,String> risultato=facade.insert(tabella, m);
-
-
-        return risultato.toString();
+        return toStringReponse(KO,"not implemented yet");
     }
 
 }

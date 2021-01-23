@@ -1,20 +1,21 @@
 package dao.impl;
 
-import dao.QueryDAO;
-import dto.MyAppProperties;
-
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.AbstractMap.SimpleEntry;
 
-import psykeco.ioeasier.db.ConnessioneDB;
-import psykeco.ioeasier.db.MySqlConnection;
-import psykeco.ioeasier.db.querycraft.QueryCraft;
-import psykeco.ioeasier.db.querycraft.SQLInsertCraft;
+import dao.QueryDAO;
 import psykeco.ioeasier.io.DebugPrint;
+import psykeco.querycraft.QueryCraft;
+import psykeco.querycraft.TableCraft;
+import psykeco.querycraft.sql.MySqlConnection;
+import psykeco.querycraft.sql.SQLDeleteCraft;
+import psykeco.querycraft.sql.SQLInsertCraft;
+import psykeco.querycraft.sql.SQLSelectCraft;
+import psykeco.querycraft.sql.SQLUpdateCraft;
 import utils.MyAppConstant;
-import utils.MyAppLog;
+import utils.MyAppProperties;
 
 /**
  * SQLDAO
@@ -22,52 +23,40 @@ import utils.MyAppLog;
 public class SQLDAO implements QueryDAO {
 
     private static DebugPrint dp;
+    private Entry<String,String> resp;
     
     static{
-        dp=new DebugPrint(MyAppLog.getInstance());
+        dp=new DebugPrint(MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_LOG),true);
 		dp.debug_mode=true;
     }
-	
-	public Entry<String,String> insert(String table, Map<String,String> values) {
-        String errore=QueryDAO.createConnection();
+
+    @Override
+    public void insert(Object o) {
+        // TODO Auto-generated method stub
         
-        if (! errore.equals(""))
-            return new SimpleEntry<>("KO",errore);
-
-        MySqlConnection c = new MySqlConnection();
-        
-
-        final String DB_NAME=MyAppProperties.getInstance().getValue(MyAppConstant.DB_NAME);
-
-        QueryCraft q = new SQLInsertCraft ().DB(DB_NAME).table(table);
-
-        for (Entry<String,String> kv : values.entrySet()) q.entry(kv.getKey(),kv.getValue());
-
-        String qcrafted=q.craft();
-
-        dp.println("[DEBUG:> SQLDAO insert] query="+qcrafted);
-
-        if(! c.esegui(qcrafted)) {
-            dp.println("[DEBUG:> SQLDAO insert] ERRORE NELLA QUERY");
-            
-            return new SimpleEntry<>("KO","errore nella query");
-        }
-        // TODO implementare un modo per ricevere il numero di sequenza
-        
-        ConnessioneDB.destroy();
-        
-        return new SimpleEntry<>("OK","valore aggiunto");
     }
 
-	public void remove        (String table, Map<String,String> values){
-        // TODO 
+    @Override
+    public void remove(Object o) {
+        // TODO Auto-generated method stub
+        
     }
 
-
-	public List<Object> select(String table, Map<String,String> values){
-        // TODO         
+    @Override
+    public List<Object> select(Object o) {
+        // TODO Auto-generated method stub
         return null;
     }
-    
+
+    @Override
+    public void update(Object o) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public Entry<String, String> getResp() {
+        return resp;
+    }
    
 }
