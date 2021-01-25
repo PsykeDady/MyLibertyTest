@@ -172,3 +172,37 @@ function callUpdateTest() {
         }
     ));
 }
+
+function callSelectListTest() {
+    var out = document.getElementById("Output")
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+        var data = "";
+        if (this.status == 200) {
+            data = this.responseText;
+        } else {
+            data = "ERRORE==" + this.statusText;
+        }
+        out.innerHTML =``;
+        data=data.substring(1,data.length-1);
+        data=data.split(',');
+        for (var i in data){
+            var row=data[i];
+            row=row.substring(1,row.length-1);
+            row=row.replaceAll("\\n","<br>");
+            if(i!=0)  out.innerHTML +=`<h3>Risultato ${i}</h3>`
+            out.innerHTML +=`${row}<br><br>`
+        }
+    };
+
+    xhr.open('POST', baseURL + "/selectListTest", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(
+        {
+            "identity"      : "1"
+        }
+    ));
+}

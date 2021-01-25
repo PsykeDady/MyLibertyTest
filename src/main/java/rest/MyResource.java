@@ -3,6 +3,8 @@ package rest;
 import static models.infosessions.ResponseState.KO;
 import static models.infosessions.ResponseState.toStringReponse;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -144,6 +146,33 @@ public class MyResource {
         dp.flush();
         Entry<String,String> resp=facade.getResp();
         return resp.getKey()+":"+resp.getValue();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("selectListTest")
+    public List<String> selectList(
+        Map<String,String> m
+    ) {
+        String methodName=""+this.getClass()+'.'+Thread.currentThread().getStackTrace()[1].getMethodName();
+        dp.debug_mode=true;
+        dp.println(
+            "[DEBUG START:> "+methodName+"] Map<String,String> m=\n"+
+            m        
+        );
+
+        SimpleDataTest e= MapperClass.mapObject(SimpleDataTest.class, m);
+        List<Object> l=facade.selectList(e);
+
+        dp.println("[DEBUG END:> "+methodName+"]");
+        dp.flush();
+        Entry<String,String> resp=facade.getResp();
+        List<String>result=new LinkedList<>();
+        result.add(resp.getKey()+":"+resp.getValue());
+        for (Object obj : l)
+            result.add(obj.toString());
+
+        return result;
     }
 
 }

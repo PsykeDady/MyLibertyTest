@@ -1,8 +1,57 @@
-#fine{
-	position: fixed;
-	width: 98%;
-	top: 95vh;
+*{
+	/* height */
+	--ch:95vh;
+	--toph: calc(var(--ch)*13/100);
+	--centroh: calc(var(--ch)*77/100);
+	--bassoh: calc(var(--ch)*10/100);
+	
+	/* width */
+	--cw:95vw;
+	
+	/* top pos */
+	--top-top: 0;
+	--centro-top: calc(var(--toph));
+	--basso-top: calc(var(--toph) + var(--centroh));
+
+
+}
+
+#top{
+	height: var(--toph);
+	width: var(--cw);
+	top: var(--top-top);
+	position: absolute;
 	border: 1px solid black;
+	margin:0;
+	padding: 0;
+}
+
+#top *{
+	margin:0;
+	padding: 0;
+}
+
+#centro{
+	height: var(--centroh);
+	width: var(--cw);
+	top: var(--centro-top);
+	position: absolute;
+	overflow-y: auto;
+}
+
+
+
+#basso{
+	height: var(--bassoh);
+	width: var(--cw);
+	top: var(--basso-top);
+	position: absolute;
+	border: 1px solid black;
+}
+
+#basso *{
+	margin:0;
+	padding: 0;
 }
 
 body table {

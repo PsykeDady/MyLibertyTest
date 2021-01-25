@@ -29,4 +29,8 @@ public class SimpleDataTest {
 	public String getDescription() {
 		return description;
 	}
+	@Override
+	public String toString() {
+		return "identity="+identity+"\nname="+name+"\ndescription="+description;
+	}
 }
