@@ -21,10 +21,13 @@ public interface QueryDAO {
    public static final int USER=0;
    public static final int PSK=1;
 
-	public void			insert(Object o);
-	public List<Object>	select(Object o);
-	public void 		remove(Object o);
-	public void 		update(Object o);
+	public Boolean 				existTable	(Class<?> c);
+	public void 				createTable (Class<?> c);
+	public void					insert		(Object   o);
+	public List<Object>			selectList	(Object   o);
+	public Map<String,Object>[]	selectMap	(Object   o);
+	public void 				remove		(Object   o);
+	public void 				update		(Object   o, String primary);
 
 	public Entry<String,String> getResp();
 
@@ -38,16 +41,16 @@ public interface QueryDAO {
 		SQLConnectionCraft s = (SQLConnectionCraft) new SQLConnectionCraft()
 								.user(mySqlSettings[USER])
 								.psk(mySqlSettings[PSK])
-								.autocommit(false)
+								.autocommit(true)
 								;
 		
 		String validation=s.validate();
 		if(! validation.equals("")) return validation;
 
 		try {MySqlConnection.createConnection(s);}
-		catch(IllegalArgumentException e){return e.toString();}
+		catch(Exception e){return e.toString();}
 
-		return "";
+		return checkAndCreate();
 	}
 
 	public static String checkAndCreate(){

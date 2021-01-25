@@ -1,0 +1,34 @@
+#fine{
+	position: fixed;
+	width: 98%;
+	top: 95vh;
+	border: 1px solid black;
+}
+
+body table {
+	height: fit-content;
+}
+
+body table td {
+	border: black inset 2px;
+	height: 18px;
+	margin: 0;
+	padding: 0;
+}
+
+body table td :active{
+	border: white inset 2px;
+	background: black;
+	color: white;
+	transition: color cubic-bezier(.17,.67,.83,.67) 0.5s;
+}
+
+body table td button, body table td button :focus, body table td button :active {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	background-color: white;
+	border: none;
+	text-align: left;
+}
+

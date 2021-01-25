@@ -16,8 +16,7 @@ import javax.ejb.TimerService;
 import jobs.impl.MyJobTest;
 import psykeco.ioeasier.io.DebugPrint;
 import psykeco.littlejonh.LittleJonH;
-import utils.MyAppConstant;
-import utils.MyAppProperties;
+import utils.MyAppLog;
 
 
 @Startup 
@@ -26,7 +25,7 @@ public class MyAppDaemon{
 	@Resource 
 	private TimerService timerService;
 
-	private DebugPrint dp;
+	private DebugPrint dp=MyAppLog.getInstance();
 
 	private IMyJobs jobs[]={
 		new MyJobTest()
@@ -38,13 +37,9 @@ public class MyAppDaemon{
 	@PostConstruct 
 	public void daemonRC() {
 		System.out.println("\n\n####Daemon load...####\n\n");
-
-		dp=new DebugPrint(MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_LOG),true);
 		dp.debug_mode=true;
-		DebugPrint.global_mode=MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_GLOBAL).equals("1");
 
 		dp.println("SERVER START NOW: "+LocalDateTime.now());
-		
 		nextTimer(1*60+0L);
 
 	}
@@ -53,7 +48,7 @@ public class MyAppDaemon{
 	public void loop(Timer t){
 
 		System.out.println("\n\n####TIMER TICK####\n\n");
-
+		dp.debug_mode=false;
 		dp.println("SERVER LOOP TICK ON: "+LocalDateTime.now());
 
 		for (IMyJobs job : jobs ){
@@ -98,6 +93,7 @@ public class MyAppDaemon{
 	@PreDestroy 
 	public void daemonDestroy() {
 		System.out.println("\n\n####Daemon stop...####\n\n");
+		dp.debug_mode=true;
 
 		dp.println("SERVER STOP NOW :"+LocalDateTime.now());
 			

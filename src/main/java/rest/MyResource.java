@@ -1,5 +1,8 @@
 package rest;
 
+import static models.infosessions.ResponseState.KO;
+import static models.infosessions.ResponseState.toStringReponse;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,24 +14,18 @@ import javax.ws.rs.core.MediaType;
 
 import facade.QueryFacade;
 import facade.impl.SQLQueryFacade;
+import models.relationship.SimpleDataTest;
 import psykeco.ioeasier.io.DebugPrint;
-import utils.MyAppConstant;
-import utils.MyAppProperties;
-
-import static models.infosessions.ResponseState.*;
+import utils.MapperClass;
+import utils.MyAppLog;
 
 @Path("my")
 public class MyResource {
 
     
     private static final QueryFacade facade=new SQLQueryFacade();
-    private static DebugPrint dp;
+    private static DebugPrint dp=MyAppLog.getInstance();
 
-    
-    static{
-        dp=new DebugPrint(MyAppProperties.getInstance().getValue(MyAppConstant.DEBUG_LOG),true);
-		dp.debug_mode=true;
-    }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,8 +60,10 @@ public class MyResource {
     public String postTest(
         Map<String,String> m
     ) {
+        String methodName=""+this.getClass()+'.'+Thread.currentThread().getStackTrace()[1].getMethodName();
+        dp.debug_mode=true;
         dp.println(
-            "[DEBUG:> postTest] Map<String,String> m=\n"+
+            "[DEBUG START:> "+methodName+"] Map<String,String> m=\n"+
             m        
         );
         
@@ -76,6 +75,7 @@ public class MyResource {
             sb.append(kv.getKey()+"="+kv.getValue()+'\n');
         }
 
+        dp.println("[DEBUG END:> "+methodName+"]");
         dp.flush();
         return sb.toString();
     }
@@ -86,14 +86,64 @@ public class MyResource {
     public String insertTest(
         Map<String,String> m
     ) {
-
+        String methodName=""+this.getClass()+'.'+Thread.currentThread().getStackTrace()[1].getMethodName();
+        dp.debug_mode=true;
         dp.println(
-            "[DEBUG:> insertTest] Map<String,String> m=\n"+
+            "[DEBUG START:> "+methodName+"] Map<String,String> m=\n"+
             m        
         );
 
+        SimpleDataTest e= MapperClass.mapObject(SimpleDataTest.class, m);
+        facade.insert(e);
 
-        return toStringReponse(KO,"not implemented yet");
+        dp.println("[DEBUG END:> "+methodName+"]");
+        dp.flush();
+        Entry<String,String> resp=facade.getResp();
+        return resp.getKey()+":"+resp.getValue();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("updateTest")
+    public String updateTest(
+        Map<String,String> m
+    ) {
+        String methodName=""+this.getClass()+'.'+Thread.currentThread().getStackTrace()[1].getMethodName();
+        dp.debug_mode=true;
+        dp.println(
+            "[DEBUG START:> "+methodName+"] Map<String,String> m=\n"+
+            m        
+        );
+
+        SimpleDataTest e= MapperClass.mapObject(SimpleDataTest.class, m);
+        facade.update(e,"identity");
+
+        dp.println("[DEBUG END:> "+methodName+"]");
+        dp.flush();
+        Entry<String,String> resp=facade.getResp();
+        return resp.getKey()+":"+resp.getValue();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deleteTest")
+    public String deleteTest(
+        Map<String,String> m
+    ) {
+        String methodName=""+this.getClass()+'.'+Thread.currentThread().getStackTrace()[1].getMethodName();
+        dp.debug_mode=true;
+        dp.println(
+            "[DEBUG START:> "+methodName+"] Map<String,String> m=\n"+
+            m        
+        );
+
+        SimpleDataTest e= MapperClass.mapObject(SimpleDataTest.class, m);
+        facade.remove(e);
+
+        dp.println("[DEBUG END:> "+methodName+"]");
+        dp.flush();
+        Entry<String,String> resp=facade.getResp();
+        return resp.getKey()+":"+resp.getValue();
     }
 
 }

@@ -113,9 +113,62 @@ function callInsertTest() {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.send(JSON.stringify(
         {
-            "tabella": "Test",
-            "prop": "TestCraft",
-            "value": "valore"
+            "identity"      : "1"           ,
+            "name"          : "nome"        ,
+            "description"   : "descrizione"
+        }
+    ));
+}
+
+function callDeleteTest() {
+    var out = document.getElementById("Output")
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+        var data = "";
+        if (this.status == 200) {
+            data = this.responseText;
+        } else {
+            data = "ERRORE==" + this.statusText;
+        }
+
+        out.innerHTML = data;
+    };
+
+    xhr.open('POST', baseURL + "/deleteTest", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(
+        {
+            "identity"      : "1"           ,
+        }
+    ));
+}
+
+function callUpdateTest() {
+    var out = document.getElementById("Output")
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+        if (this.readyState != 4) return;
+        var data = "";
+        if (this.status == 200) {
+            data = this.responseText;
+        } else {
+            data = "ERRORE==" + this.statusText;
+        }
+
+        out.innerHTML = data;
+    };
+
+    xhr.open('POST', baseURL + "/updateTest", true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send(JSON.stringify(
+        {
+            "identity"      : "1"           ,
+            "description"   : "un altra descrizione"
         }
     ));
 }
